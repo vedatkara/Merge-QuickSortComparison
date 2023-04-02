@@ -5,22 +5,41 @@ public class MergeSort {
     pieces. As we can understand from the previous sentences merge-sort uses a recursive method.
     */
 
-
     public void MergeSort(int[] arrayToSort, int numberOfPartitions) {
         if (numberOfPartitions == 2)
             mergeSortTwo(arrayToSort, 0, arrayToSort.length - 1);
 
-        else if (numberOfPartitions == 3)
-            return;
+        else if (numberOfPartitions == 3) {
 
-        else
+            // if array is empty return 0.
+            if (arrayToSort == null)
+                return;
+
+            // Duplicate the original array and copy elements into duplicate array.
+            int[] dupArray = new int[arrayToSort.length];
+            for (int i = 0; i < dupArray.length; i++)
+                dupArray[i] = arrayToSort[i];
+
+            // Call sort function.
+            mergeSortThree(dupArray, 0, arrayToSort.length, arrayToSort);
+
+            // Copy the sorted elements back into the array we want to sort in the first place.
+            for (int i = 0; i < dupArray.length; i++)
+                arrayToSort[i] = dupArray[i];
+            /*
+                We duplicate the original array's elements that way we can compare elements(at mergeThree() )
+                and preserve their original indexes.
+             */
+
+        } else
             System.out.println("Wrong 'numberOfPartitions' value. Enter either 2 or 3.");
 
 
     }
 
-    private void mergeTwo(int[] arr, int left, int mid, int right)//Merges two sub-arrays into one, first array includes [left to mid]
-    //                                second array includes [mid to right].
+    private void mergeTwo(int[] arr, int left, int mid, int right)//Merges two sub-arrays into one,
+    // first array includes [left to mid],
+    // second array includes [mid to right].
     {
         // To initialize temp arrays find sizes of the two sub-arrays
         int n1 = mid - left + 1;
@@ -79,37 +98,17 @@ public class MergeSort {
             int mid = (left + right) / 2;
 
             // Sort two parts individually and recursively
-            mergeSortTwo(arr, left, mid);
-            mergeSortTwo(arr, mid + 1, right);
+            mergeSortTwo(arr, left, mid); //recursive
+            mergeSortTwo(arr, mid + 1, right);//recursive
 
             // Merge the sorted halves
             mergeTwo(arr, left, mid, right);
         }
     }
 
-    public static void mergeSort3Way(Integer[] gArray) {
-        // if array of size is zero returns null
-        if (gArray == null)
-            return;
+    //public static void mergeSort3Way(Integer[] gArray)
 
-        // creating duplicate of given array
-        Integer[] fArray = new Integer[gArray.length];
-
-        // copying elements of given array into
-        // duplicate array
-        for (int i = 0; i < fArray.length; i++)
-            fArray[i] = gArray[i];
-
-        // sort function
-        mergeSortThree(fArray, 0, gArray.length, gArray);
-
-        // copy back elements of duplicate array
-        // to given array
-        for (int i = 0; i < fArray.length; i++)
-            gArray[i] = fArray[i];
-    }
-
-    public static void mergeSortThree(Integer[] arrayToSort, int left, int right, Integer[] destArr) {
+    public static void mergeSortThree(int[] arrayToSort, int left, int right, int[] destArr) {
         // If array includes only 1 element return.
         if (right - left < 2)
             return;
@@ -127,22 +126,21 @@ public class MergeSort {
         mergeThree(destArr, left, midOne, midTwo, right, arrayToSort);
     }
 
-    public static void mergeThree(Integer[] arr, int left, int midOne, int midTwo, int right, Integer[] destArr) {
+    public static void mergeThree(int[] arr, int left, int midOne, int midTwo, int right, int[] destArr) {
 
-        int i = left, l = left, j = midOne, k = midTwo;
+        int i = left, l = left /* this one for destination array */, j = midOne, k = midTwo;
 
         while ((i < midOne) && (j < midTwo) && (k < right)) { // Condition to keep in bounds.
 
             /* Compare the start indexes of three parts. Find the smaller element and place it in first.
             DO NOT INCREASE the index number unless it was reindex into orig. array.
             */
-            if (arr[i] < arr[j]) { // compare left and midOne if left is smaller enter
-                if (arr[i] < arr[k])// compare
+            if (arr[i] < arr[j]) { // compare left and midOne, if left is smaller enter
+                if (arr[i] < arr[k])// compare left and midTwo...
                     destArr[l++] = arr[i++];
                 else
                     destArr[l++] = arr[k++];
-            }
-            else {
+            } else {
                 if (arr[j] < arr[k])
                     destArr[l++] = arr[j++];
                 else
@@ -150,8 +148,7 @@ public class MergeSort {
             }
         }
 
-        // case where first and second ranges have
-        // remaining values
+        //if there are remaining elements at first two parts compare and add them too.
         while ((i < midOne) && (j < midTwo)) {
             if (arr[i] < arr[j])
                 destArr[l++] = arr[i++];
@@ -159,8 +156,7 @@ public class MergeSort {
                 destArr[l++] = arr[j++];
         }
 
-        // case where second and third ranges have
-        // remaining values
+        //if there are remaining elements at second and third parts compare and add them too.
         while ((j < midTwo) && (k < right)) {
             if (arr[j] < arr[k])
                 destArr[l++] = arr[j++];
@@ -169,8 +165,7 @@ public class MergeSort {
                 destArr[l++] = arr[k++];
         }
 
-        // case where first and third ranges have
-        // remaining values
+        //if there are remaining elements at first and third parts compare and add them too.
         while ((i < midOne) && (k < right)) {
             if (arr[i] < arr[k])
                 destArr[l++] = arr[i++];
@@ -178,15 +173,15 @@ public class MergeSort {
                 destArr[l++] = arr[k++];
         }
 
-        // copy remaining values from the first range
+        // if there are still remaining elements in first part copy them into destination.
         while (i < midOne)
             destArr[l++] = arr[i++];
 
-        // copy remaining values from the second range
+        // if there are still remaining elements in first part copy them into destination.
         while (j < midTwo)
             destArr[l++] = arr[j++];
 
-        // copy remaining values from the third range
+        // if there are still remaining elements in first part copy them into destination.
         while (k < right)
             destArr[l++] = arr[k++];
 
