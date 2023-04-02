@@ -5,7 +5,7 @@ public class MergeSort {
     pieces. As we can understand from the previous sentences merge-sort uses a recursive method.
     */
 
-    public void MergeSort(int[] arrayToSort, int numberOfPartitions) {
+    public void mergeSort(int[] arrayToSort, int numberOfPartitions) {
         if (numberOfPartitions == 2)
             mergeSortTwo(arrayToSort, 0, arrayToSort.length - 1);
 
