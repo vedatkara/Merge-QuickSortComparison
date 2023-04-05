@@ -4,7 +4,6 @@ public class MergeSort {
     the given array into sub-arrays until no further division can be done. Then merges sub-arrays start with the smallest
     pieces. As we can understand from the previous sentences merge-sort uses a recursive method.
     */
-
     public void mergeSort(int[] arrayToSort, int numberOfPartitions) {
         if (numberOfPartitions == 2)
             mergeSortTwo(arrayToSort, 0, arrayToSort.length - 1);
