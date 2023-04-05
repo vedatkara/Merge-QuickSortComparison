@@ -38,18 +38,19 @@ public class QuickSort {
         swap(arrayToSort, piv, right);
     }
 
-    private void medianOf3(int[] arrayToSort, int left, int right){
-        int mid = ((right + 1)- left) / 2; // find middle index
+    private int medianOf3(int[] arrayToSort, int left, int right){
+        int mid = (right - left) / 2; // find middle index
 
         // order first, mid, last element the smallest to the biggest, find median.
         if(arrayToSort[left] > arrayToSort[mid])
-            swap(arrayToSort,left, mid);
+            swap(arrayToSort, left, mid);
         if(arrayToSort[left] > arrayToSort[right])
             swap(arrayToSort, left, right);
         if(arrayToSort[mid] > arrayToSort[right])
             swap(arrayToSort, mid, right);
 
         swap(arrayToSort, mid, right); // put the pivot(median) into the last index
+        return arrayToSort[right];
     }
 
     // Divide the array as pivot's left and right.
@@ -132,30 +133,25 @@ public class QuickSort {
     }
 
     // Divide the array as pivot's left and right.
-    private int partitionMedian(int[] arrayToSort, int left, int right)
+    private int partitionMedian(int[] arrayToSort, int left, int right, int pivot)
     {
-        // Chose pivot median of first, middle and last element.
-        medianOf3(arrayToSort,left,right); // find the median of 3 and put pivot into  the last index.
-        int pivot = arrayToSort[right];
-
         // index of the bigger element, also indicates correct position of the pivot.
-        int i = (left-1);
+        int i = (left - 1);
+        int j = right;
 
-        // loop to find correct position of the pivot also reordering the array such way elements at left of the pivot
-        // are smaller and elements at right of the pivot are bigger than pivot.
-        for (int j = left; j < right; j++)
-        {
-            // If element at jth index (current) is smaller than pivot enters
-            if (arrayToSort[j] < pivot)
-            {
-                i++; // increase index of the smaller element
-                swap(arrayToSort, i,j); // swap the elements
+        while(i < j){
+            while(arrayToSort[++i] < pivot){
+                while(j > 0  && arrayToSort[--j] > pivot){
+                    if(i >= j)
+                        break;
+                    else
+                        swap(arrayToSort, i, j);
+                }
             }
         }
-        // leave the loop when reaching to the pivot.
 
-        swap(arrayToSort, i+1, right); // place pivot into the correct index.
-        return i+1;
+        swap(arrayToSort, i, right); // place pivot into the correct index.
+        return i;
     }
 
     private void quickSortMedian(int[] arrayToSort, int left, int right)
@@ -163,7 +159,8 @@ public class QuickSort {
         if (left < right)
         {
             // Partition of the array, returns pivot's position.
-            int part = partitionMedian(arrayToSort, left, right);
+            int pivot = medianOf3(arrayToSort, left, right);
+            int part = partitionMedian(arrayToSort, left, right, pivot);
 
             // Recursive call for partition and quick-sorting.
             quickSortMedian(arrayToSort, left, part-1);
